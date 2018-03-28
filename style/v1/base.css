@@ -1,0 +1,199 @@
+/*
+    全站头部标题说明
+*/
+.sp-title{ margin-top: 20px; font-family:"Microsoft YaHei", "Consolas", "Monaco","Courier New";}
+    .sp-title h1{font-weight: normal;}
+        .sp-title h1 small{ margin-left: 10px; font-weight: normal; font-size: 18px;}
+/*
+    创建业务流*附件部分样式
+*/
+.createfile{ height: 54px; padding: 0px;zoom: 1;  position: relative; overflow: hidden;  }
+.createfile:hover{ background: #f5f5f5;}
+.createfile-img{position: absolute;left: 10px;top: 5px; width: 50px; height: 44px; padding-right: 10px; }
+.createfile-img img{ width: 50px; height: 44px;}
+.createfile-body{  position: absolute;left: 70px;top: 5px;}
+.createfile-body h4{ height: 22px; line-height: 22px; font-size: 14px; margin: 0; padding: 0; font-weight: 800;}
+.createfile-txt{ height: 22px; line-height: 22px; font-size: 12px; color: #666;}
+.createfile-button{position: absolute;right:5px;top: 10px; }
+/* 用户弹出框开始 */
+.popover-user { width: 244px; height: 168px; }
+.media-user { border-bottom: #ddd dotted 1px; padding-bottom: 8px; font-size: 12px; }
+.media-user .media-left img { border-radius: 4px; border: #ddd solid 1px; padding: 1px; margin-bottom: 6px; }
+.media-user h2 { font-size: 14px; color: #333; }
+.media-user h2 img { height: 14px; margin-right: 5px; }
+.fa.fa-heart, .fa.fa-heart-o { color: #f00;}
+.popover-user .media h2 small, .panel .media h2 small { font-size: 12px;}
+.popover-user .media h2 a, .panel .media h2 a { color: #666; }
+.popover-user .media .time, .panel .media .time { line-height: 1.6em; color: #666;}
+.popover-user .media .label, .panel .media .label { font-size: 12px; font-weight: normal; width: 53px; line-height: 1.6em; padding: 0; display: block; text-align: center; }
+/**********/
+.popover-user .media-footer, .panel .media-footer {margin-top: 5px;}
+.popover-user .media-footer .board, .panel .media-footer .board {height: 45px; border-bottom: #eee solid 1px; margin-bottom: 8px; color: #666;}
+.popover-user .media-footer .board span, .panel .media-footer .board span {width: 25%; font-size: 12px;}
+.popover-user .media-footer .board span em, .panel .media-footer .board span em {font-size: 14px;}
+.popover-user .media-footer .btn, .panel .media-footer .btn { margin-right: 10px;}
+/* 用户弹出框结束 */
+/* 个人主页开始 */
+.board { height: 80px; }
+.board span { width: 33.33%; float: left; text-align: center; border-right: #ddd solid 1px; font-size: 18px; }
+.board span:last-child { border-right: none; }
+.board span em { font-style: normal; font-size: 24px; color: #D8582B; line-height: 1.6em; }
+
+
+.media-profile .media-object { margin-right: 10px; width: 130px; height: 130px; border-radius: 4px; padding: 2px; border: #ddd solid 1px; }
+.media-profile h1 { border-bottom: #eee solid 1px; padding-bottom: 10px; margin-bottom: 15px; }
+.media-profile h1 a { font-size: 12px; }
+.media-profile h1 img { height: 18px; margin-right: 10px; }
+.media-profile h1 small em { font-style: normal; color: #D8582B; }
+.media-profile p { font-size: 12px; color: #666; margin-left: -20px; }
+.media-profile p:last-child { margin-bottom: 0; }
+.media-profile p span { margin-left: 20px; }
+
+.fa-mars { font-weight: bold; color: #3B6FBA; }
+.fa-venus { font-weight: bold; color: #D8582B; }
+/* 个人主页结束 */
+/*业务流回复头部*/
+.panel-fsc,.panel-default>.panel-fsc{ font-size: 13px; color: #666;}
+    .panel-fsc a{ }
+    .panel-fsc a:hover{ text-decoration: none;}
+.panel-question{ font-size: 16px; }
+.panel-fscf,.panel-default>.panel-fscf{ font-size: 13px; color: #666;}
+/*接收人*/
+.panel-receive{ color: #cc0000;  display: inline-block;}
+.panel-receive a{ color: #cc0000; text-decoration: none;}
+/*测试用例*/
+.rowBottom{ margin-top: 15px;}
+/*
+grid view 样式
+*/
+.grid-view-loading
+{
+    background:url(loading.gif) no-repeat;
+}
+
+.grid-view
+{
+    padding: 15px 0;
+}
+
+.grid-view table.items
+{
+    background: white;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px #D0E3EF solid;
+}
+
+.grid-view table.items th, .grid-view table.items td
+{
+    font-size: 0.9em;
+    border: 1px white solid;
+    padding:0.9em 0.3em;
+
+}
+
+.grid-view table.items th
+{
+    color: white;
+    background: url("bg.gif") repeat-x scroll left top white;
+    text-align: center;
+}
+
+.grid-view table.items th a
+{
+    color: #EEE;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.grid-view table.items th a:hover
+{
+    color: #FFF;
+}
+
+.grid-view table.items th a.asc
+{
+    background:url(up.gif) right center no-repeat;
+    padding-right: 10px;
+}
+
+.grid-view table.items th a.desc
+{
+    background:url(down.gif) right center no-repeat;
+    padding-right: 10px;
+}
+
+.grid-view table.items tr.even
+{
+    background: #F8F8F8;
+}
+
+.grid-view table.items tr.odd
+{
+    background: #E5F1F4;
+}
+
+.grid-view table.items tr.selected
+{
+    background: #BCE774;
+}
+
+.grid-view table.items tr:hover.selected
+{
+    background: #CCFF66;
+}
+
+.grid-view table.items tbody tr:hover
+{
+    background: #ECFBD4;
+}
+
+.grid-view .link-column img
+{
+    border: 0;
+}
+
+.grid-view .button-column
+{
+    text-align: center;
+    width: 60px;
+}
+
+.grid-view .button-column img
+{
+    border: 0;
+}
+
+.grid-view .checkbox-column
+{
+    width: 15px;
+}
+
+.grid-view .summary
+{
+    margin: 0 0 5px 0;
+    text-align: right;
+}
+
+.grid-view .pager
+{
+    margin: 5px 0 0 0;
+    text-align: right;
+}
+
+.grid-view .empty
+{
+    color: #ff0000;
+    font-style: normal;
+}
+
+.grid-view .filters input,
+.grid-view .filters select
+{
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 30px;
+}
+
+/*修改图片大小*/
+.panel-body img{ max-width: 1100px;}

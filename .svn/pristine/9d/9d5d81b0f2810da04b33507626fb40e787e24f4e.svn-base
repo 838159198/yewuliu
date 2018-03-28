@@ -1,0 +1,1 @@
+main<?php echo $content;?>2323

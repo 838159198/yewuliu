@@ -1,0 +1,40 @@
+/* -- 1.0 Reset -- */
+ul,ol{padding-left:0;list-style-type:none;}
+img{border:0 none;}
+em,i{font-style:normal;}
+.boxwrap input,textarea,select{font-size:15px;font-size:100%;font-family:inherit;}
+.boxwrap a:link{color:#4F14F7; text-decoration:none;}
+.boxwrap a:hover{color:#FF9900; text-decoration:underline;}
+a:visited{color:#551a8b; text-decoration:none;}
+a:active{color: #cc0000;text-decoration:none;}
+input[type="text"]{border:1px solid #c7c7c7; outline: 0 none;}
+input[type="text"]:focus{border:1px solid #f6ca1c;}
+
+/* -- 2.0 Common style -- */
+
+/* -- display && float -- */
+.dn{display:none;}
+.db{display:block;}
+.fl{float:left;}
+.fr{float:right;}
+/* -- position -- */
+.rel{position: relative;}
+.abs{position: absolute;}
+/* -- 3.0 Main structure -- */
+.main-wraper{padding: 5px;}
+.switchBox{margin-right: 10px;}
+.switch_box_l{width: 9px;height: 21px;background: url(/css/switch_box_l.gif) no-repeat;}
+.switch_box_r{width: 9px;height: 21px;background: url(/css/switch_box_r.gif) no-repeat;}
+.switch_box_c{height: 21px;background: url(/css/switch_box_c.gif) repeat-x;}
+.switchBtn{width:46px;height: 20px;line-height:20px; text-align:center;color:#fff;font-family:'Microsoft YaHei';background: url(/css/btnSwitch_c.gif) repeat-x;top: 0px;left: 0px;cursor: pointer;z-index: 999;}
+.switchBox .swichTxt{padding:0 8px;height: 20px;line-height:22px;text-align:center;font-family:'Microsoft YaHei';color: #797e81;text-decoration: none;}
+.switchBtn-l{width: 8px;height: 20px;line-height:20px; text-align:center;color:#fff;font-family:'Microsoft YaHei';background: url(/css/btnSwitch_l.gif) no-repeat;position:absolute;top: 0px;left: -6px;cursor: pointer;}
+.switchBtn-r{width: 8px;height: 20px;line-height:20px; text-align:center;color:#fff;font-family:'Microsoft YaHei';background: url(/css/btnSwitch_r.gif) no-repeat;position:absolute;top: 0px;right: -6px;cursor: pointer;}
+/* -- 4.0 Clear -- */
+.clear { clear: both; display: block; overflow: hidden; visibility: hidden; width: 0; height: 0; }
+.clearfix:before, .clearfix:after { content: '\0020'; display: block; overflow: hidden; visibility: hidden; width: 0; height: 0; }
+.clearfix:after { clear: both }
+.clearfix { zoom: 1 }
+/*topbar*/
+.topbar{background:#ceeeff;padding:10px 5px;border:1px solid #A6D4EA;margin-top:5px;}
+.topbar .tit{color: #00578F;font-size: 14px;font-weight: bold;}

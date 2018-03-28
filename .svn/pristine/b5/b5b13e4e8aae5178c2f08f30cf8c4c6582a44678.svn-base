@@ -1,0 +1,556 @@
+<?php
+
+/**
+ * This is the model class for table "{{operation_post}}".
+ *
+ * The followings are the available columns in table '{{operation_post}}':
+ * @property string $id
+ * @property string $title
+ * @property string $content
+ * @property string $priority
+ * @property string $sc_id
+ * @property string $create_mid
+ * @property string $receive_mid
+ * @property string $file
+ * @property string $create_datetime
+ * @property string $end_datetime
+ * @property string $receive_datetime
+ * @property string $status
+ * @property string $cur_status
+ * @property string $about_uid
+ */
+class OperationPost extends CActiveRecord
+{
+    //发布人姓名
+    public $manage_create_name;
+    //接收人姓名
+    public $manage_receive_name;
+    //当前拥有者
+    public $manage_owner_name;
+    //当前开发者
+    public $manage_develop_name;
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return '{{operation_post}}';
+	}
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules()
+	{
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('title, content, sc_id, create_mid,  create_datetime', 'required'),
+			array('title', 'length', 'max'=>30),
+			array('priority', 'length', 'max'=>1),
+			array('sc_id', 'length', 'max'=>2),
+			array('create_mid, receive_mid, status', 'length', 'max'=>10),
+			array('file', 'length', 'max'=>255),
+			array('end_datetime, receive_datetime,finishdatetime', 'safe'),
+			// The following rule is used by search().
+			// @todo Please remove those attributes that should not be searched.
+			array('finishdatetime,manage_owner_name,manage_develop_name,estimate,bug,test_estimate,owner_uid,manage_create_name,manage_receive_name,id, title, content, priority, sc_id, create_mid, receive_mid,owner_mid, file, create_datetime, end_datetime, receive_datetime, status,cur_status,about_uid', 'safe', 'on'=>'search'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations()
+	{
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+            'manage_create' => array(self::BELONGS_TO, 'Manage', 'create_mid'),
+            'manage_receive' => array(self::BELONGS_TO, 'Manage', 'receive_mid'),
+            'manage_owner' => array(self::BELONGS_TO, 'Manage', 'owner_mid'),
+            'manage_develop' => array(self::BELONGS_TO, 'Manage', 'owner_uid'),
+            'sitecategory' => array(self::BELONGS_TO, 'OperationSitecategory', 'sc_id'),
+            'post_department' => array(self::BELONGS_TO, 'OperationDepartment', 'departmentId'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
+		return array(
+			'id' => 'ID',
+			'title' => '业务标题',
+			'content' => '业务内容',
+			'priority' => '优先级',
+			'sc_id' => '网站分类',
+			'create_mid' => '创建人',
+			'receive_mid' => '接收人',
+            'owner_mid'=>'拥有者',
+			'file' => '附件id，多个附件id用,隔开',
+			'create_datetime' => '发布日期',
+			'end_datetime' => '结束日期',
+			'receive_datetime' => '接收日期',
+			'status' => '任务状态',
+            'cur_status' => '开关状态',
+            'manage_create_name'=>'创建人',
+            'manage_receive_name'=>'接收人',
+            'manage_owner_name'=>'拥有者',
+            'estimate'=>'预估时间',
+            'test_estimate'=>'测试时间',
+            'departmentId'=>'解决部门',
+            'owner_uid' => '开发者',
+            'finishdatetime' => '期望完成时间',
+            'test_content' => '评分详情',
+            'about_uid'=>'相关者'
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
+	 */
+	public function search()
+	{
+		$criteria=new CDbCriteria;
+        $criteria->with = array('manage_create','manage_receive','manage_owner');
+		$criteria->compare('t.id',$this->id);
+		$criteria->compare('t.title',$this->title,true);
+		$criteria->compare('t.priority',$this->priority,true);
+		$criteria->compare('t.sc_id',$this->sc_id,true);
+        $criteria->compare('t.estimate',$this->estimate,true);
+		$criteria->compare('t.create_datetime',$this->create_datetime,true);
+		$criteria->compare('t.end_datetime',$this->end_datetime,true);
+		$criteria->compare('t.receive_datetime',$this->receive_datetime,true);
+		$criteria->compare('t.status',$this->status);
+        $criteria->compare('t.cur_status',$this->cur_status);
+        $criteria->compare('t.about_uid',$this->about_uid);
+        $criteria->compare('t.owner_uid',$this->owner_uid);
+        $criteria->compare('t.create_mid',$this->create_mid);
+        $criteria->compare('t.receive_mid',$this->receive_mid);
+        $criteria->compare('t.owner_mid',$this->owner_mid);
+        $criteria->compare('manage_create.name',$this->manage_create_name,true);
+        $criteria->compare('manage_receive.name',$this->manage_receive_name,true);
+        $criteria->compare('manage_owner.name',$this->manage_owner_name,true);
+
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+            'sort'=>array(
+                'defaultOrder'=>'t.id DESC',
+                'attributes'=>array(
+                    'manage_create_name'=>array(
+                        'asc'=>'manage_create.name',
+                        'desc'=>'manage_create.name DESC',
+                    ),
+                    'manage_receive_name'=>array(
+                        'asc'=>'manage_receive.name',
+                        'desc'=>'manage_receive.name DESC',
+                    ),
+                    'manage_owner_name'=>array(
+                        'asc'=>'manage_owner.name',
+                        'desc'=>'manage_owner.name DESC',
+                    ),
+                    'manage_develop_name'=>array(
+                        'asc'=>'manage_develop.name',
+                        'desc'=>'manage_develop.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+		));
+	}
+    public function myalldata()
+    {
+        $name = Yii::app()->user->name;
+        $uid = Yii::app()->user->id;
+        $criteria=new CDbCriteria;
+
+        $criteria->with = array('manage_create','manage_receive','manage_owner');
+        $criteria->addCondition("t.create_mid={$uid}",'OR');
+        $criteria->addCondition("t.receive_mid={$uid}",'OR');
+        $criteria->addCondition("t.owner_mid={$uid}",'OR');
+        $criteria->compare('t.id',$this->id);
+        $criteria->compare('t.title',$this->title,true);
+        //$criteria->compare('t.content',$this->content,true);
+        $criteria->compare('t.priority',$this->priority,true);
+        $criteria->compare('t.sc_id',$this->sc_id,true);
+        $criteria->compare('t.estimate',$this->estimate,true);
+        $criteria->compare('t.create_datetime',$this->create_datetime,true);
+        $criteria->compare('t.end_datetime',$this->end_datetime,true);
+        $criteria->compare('t.receive_datetime',$this->receive_datetime,true);
+        $criteria->compare('t.status',$this->status);
+        $criteria->compare('t.cur_status',$this->cur_status);
+        //$criteria->compare('manage_create.name',$name,true);
+        //$criteria->compare('manage_receive.name',$name,true);
+        //$criteria->compare('manage_owner.name',$name,true);
+        /*$criteria->addCondition("manage_create.name={$name}",'OR');
+        $criteria->addCondition("manage_receive.name={$name}",'OR');
+        $criteria->addCondition("manage_owner.name={$name}",'OR');*/
+
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+            'sort'=>array(
+                'defaultOrder'=>'t.id DESC',
+                //加入排序
+                'attributes'=>array(
+                    'manage_create_name'=>array(
+                        'asc'=>'manage_create.name',
+                        'desc'=>'manage_create.name DESC',
+                    ),
+                    'manage_receive_name'=>array(
+                        'asc'=>'manage_receive.name',
+                        'desc'=>'manage_receive.name DESC',
+                    ),
+                    'manage_owner_name'=>array(
+                        'asc'=>'manage_owner.name',
+                        'desc'=>'manage_owner.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+        ));
+    }
+    /*
+     * 进行中
+     * */
+    public function underwaydata($status)
+    {
+
+        $uid = Yii::app()->user->id;
+        $criteria=new CDbCriteria;
+
+        $criteria->with = array('manage_create','manage_receive','manage_owner');
+        $criteria->addCondition("t.owner_mid={$uid}",'OR');
+        //$criteria->addCondition("t.status=2",'OR');
+        $criteria->compare('t.id',$this->id);
+        $criteria->compare('t.title',$this->title,true);
+        //$criteria->compare('t.content',$this->content,true);
+        $criteria->compare('t.priority',$this->priority,true);
+        $criteria->compare('t.sc_id',$this->sc_id,true);
+        $criteria->compare('t.estimate',$this->estimate,true);
+        $criteria->compare('t.create_datetime',$this->create_datetime,true);
+        $criteria->compare('t.end_datetime',$this->end_datetime,true);
+        $criteria->compare('t.receive_datetime',$this->receive_datetime,true);
+        $criteria->compare('manage_create.name',$this->manage_create_name,true);
+        $criteria->compare('manage_receive.name',$this->manage_receive_name,true);
+        $criteria->compare('t.status',$status);
+        $criteria->compare('t.cur_status',$this->cur_status);
+
+        return new CActiveDataProvider($this, array(
+            'criteria'=>$criteria,
+            'pagination' => array(
+                'pageSize' => 20,
+            ),
+            'sort'=>array(
+                'defaultOrder'=>'t.id DESC',
+                //加入排序
+                'attributes'=>array(
+                    'manage_create_name'=>array(
+                        'asc'=>'manage_create.name',
+                        'desc'=>'manage_create.name DESC',
+                    ),
+                    'manage_receive_name'=>array(
+                        'asc'=>'manage_receive.name',
+                        'desc'=>'manage_receive.name DESC',
+                    ),
+                    'manage_owner_name'=>array(
+                        'asc'=>'manage_owner.name',
+                        'desc'=>'manage_owner.name DESC',
+                    ),
+                    '*',
+                ),
+            ),
+        ));
+    }
+
+	/**
+	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
+	 * @param string $className active record class name.
+	 * @return OperationPost the static model class
+	 */
+	public static function model($className=__CLASS__)
+	{
+		return parent::model($className);
+	}
+    /*
+     * 优先级样式
+     * */
+    public function getXpriority()
+    {
+        switch($this->priority)
+        {
+            case 1:
+                $data = "<span class=\"label label-success\">正常</span>";
+                break;
+            case 2:
+                $data = "<span class=\"label label-danger\">紧急</span>";
+                break;
+            case 3:
+                $data = "<span class=\"label label-default\">常规</span>";
+                break;
+            default:
+                $data = "<span class=\"label label-default\">错误</span>";
+                break;
+        }
+        return $data;
+    }
+    /*
+     * 部门样式
+     * */
+    public function getXdepartment()
+    {
+        switch($this->departmentId)
+        {
+            case 1:
+                $data = "<span class=\"label label-success\">正常</span>";
+                break;
+            case 2:
+                $data = "<span class=\"label label-danger\">紧急</span>";
+                break;
+            default:
+                $data = "<span class=\"label label-default\">错误</span>";
+                break;
+        }
+        return $data;
+    }
+    /*
+     * 状态样式
+     * */
+    public function getXstatus()
+    {
+        switch($this->status)
+        {
+            case 1:
+                $data = "<span class=\"label label-default\">等待领取</span>";
+                break;
+            case 2:
+                $data = "<span class=\"label label-success\">进行中</span>";
+                break;
+            case 3:
+                $data = "<span class=\"label label-primary\">完成</span>";
+                break;
+            case 4:
+                $data = "<span class=\"label label-primary\">暂停</span>";
+                break;
+            default:
+                $data = "<span class=\"label label-danger\">错误</span>";
+                break;
+        }
+        return $data;
+    }
+    /*
+ * 状态样式
+ * */
+    public function getXcur_status()
+    {
+        switch($this->cur_status)
+        {
+            case 0:
+                $data = "<span class=\"btn btn-primary btn-sm\" id=\"cur_status_$this->id\">关闭</span>";
+                break;
+            case 1:
+                $data = "<span class=\"btn btn-success btn-sm\" id=\"cur_status_$this->id\">开启</span>";
+                break;
+            default:
+                $data = "<span class=\"btn btn-primary btn-sm\" id=\"cur_status_$this->id\">关闭</span>";
+                break;
+        }
+        return $data;
+    }
+    /*
+     * URL
+     * */
+    public function getUrl()
+    {
+        return Yii::app()->createUrl("operation/default/detail?id=".$this->id);
+    }
+    /*
+     * 标题
+     * */
+    public function getXtitle()
+    {
+        return CHtml::link($this->title,$this->url,array("target"=>"_blank"));
+        //return "<a target='_blank' href='{$this->url}' >".$this->title."</a>";
+    }
+    /*
+     * 创建*来源网站
+     * */
+    //public function get
+    /*
+     * 状态列表下拉
+     * */
+    public function getlistDataStatus()
+    {
+        // $a = 1,2,3,4,5,6; $b  array_map($a,$b,'key','value')
+        $data = array();
+        $data = array(array("key"=>1,"value"=>"等待领取"),array("key"=>2,"value"=>"进行中"),array("key"=>3,"value"=>"完成"),array("key"=>4,"value"=>"暂停"));
+        //$data[1]="代理商";
+        //$data[0]="普通用户";
+        return $data;
+    }
+    /*
+ * 状态列表下拉
+ * */
+    public function getlistDatacurStatus()
+    {
+        $data = array(array("key"=>1,"value"=>"开启"),array("key"=>0,"value"=>"关闭"));
+        return $data;
+    }
+    /*
+     * 下拉：网站分类
+     * */
+    public function getListDataSiteCategory()
+    {
+        $model = new OperationSitecategory();
+        $data = $model->findAll("status=1");
+        return $data;
+    }
+    /*
+    * 下拉：业务名称分类
+    * */
+    public static  function getListDataTitleCategory()
+    {
+        $model = new OperationTitlecategory();
+       // $titles = $model->findAll("status=1");
+        $titles =array(array("key"=>1,"value"=>"[移动客户端]"),array("key"=>2,"value"=>"[应用市场]"),array("key"=>3,"value"=>"[迅推客户端]"),
+            array("key"=>4,"value"=>"[速推客户端]"),array("key"=>5,"value"=>"[PC端]"),array("key"=>6,"value"=>"[移动端商务]"),array("key"=>7,"value"=>"[测试专用]"),
+            array("key"=>8,"value"=>"[业务流系统]"),array("key"=>9,"value"=>"[WEB]"));
+
+        return $titles;
+    }
+    /*
+     * 下拉：优先级
+     * */
+    public function getlistDataPriority()
+    {
+        $data = array();
+        $data = array(array("key"=>1,"value"=>"正常"),array("key"=>2,"value"=>"紧急"),array("key"=>3,"value"=>"常规"));
+        return $data;
+    }
+    /*
+    * 下拉：优先级不含常规
+    * */
+    public function getlistDataPriorityNo()
+    {
+        $data = array();
+        $data = array(array("key"=>1,"value"=>"正常"),array("key"=>2,"value"=>"紧急"));
+        return $data;
+    }
+    /*
+    * 下拉：创建人
+    * */
+    public function getlistDataCreate()
+    {
+        $data = array();
+        $model = new Manage();
+        $data = $model->findAll(array( 'order' => 'status DESC' ));
+        return $data;
+    }
+    /*
+   * 下拉：接受人
+   * */
+    public function getlistDataReceive()
+    {
+        $data = array();
+        $model = new Manage();
+        $data = $model->findAll(array( 'order' => 'status DESC' ));
+        return $data;
+    }
+    /*
+   * 下拉：拥有者
+   * */
+    public function getlistDataOwner()
+    {
+        $data = array();
+        $model = new Manage();
+        $data = $model->findAll(array( 'order' => 'status DESC' ));
+        return $data;
+    }
+    /*
+ * 下拉：开发者
+ * */
+    public function getlistDataDevelop()
+    {
+        $data = array();
+        $model = new Manage();
+        $data = $model->findAll(array( 'order' => 'status DESC' ));
+        return $data;
+    }
+    /*
+     * 详情获取带有链接的用户名：创建人
+     * */
+    public function getCreateUserLinkName()
+    {
+        if(empty($this->manage_create))
+        {
+            return "---";
+        }else{
+            $name = $this->manage_create->name;
+            $uidlink=Yii::app()->createUrl("manage/AjaxDetail",array("id"=>$this->create_mid));
+
+            return CHtml::link($name,"javascript:void()",array("data-url"=>$uidlink,"rel"=>"author"));
+        }
+    }
+    /*
+     * 返回文件列表
+     * */
+    public function getXfile()
+    {
+        if(empty($this->file))
+        {
+            return null;
+        }else{
+            //$fileArray = explode(",",$this->file);
+            $data = OperationFile::model()->findAll(array("condition"=>"`id` in ({$this->file})"));
+            if(empty($data))
+            {
+                return null;
+            }else{
+                return $data;
+            }
+        }
+    }
+    /*
+     * 业务流详情根据状态提示消息
+     * */
+    public function getXdetailStatusTips()
+    {
+        if($this->status==1)
+        {
+            $data = "<div class=\"alert alert-warning text-center\" role=\"alert\"><strong>本条业务流正期待着你来领取！</strong><a class='btn btn-info' href='javascript:addOperationTips(".$this->id.")'>领取</a> </div>";
+        }
+        elseif($this->status==2)
+        {
+            $data="<div class=\"alert alert-info text-center\" role=\"alert\"><strong>当前状态 ：进行中</strong></div>";
+        }
+        elseif($this->status==3)
+        {
+            $data="<div class=\"alert alert-success text-center\" role=\"alert\"><strong>提示：该业务流已于 {$this->end_datetime} 由 ".Helper::UserLinkName($this->close_mid)." 确认完成！</strong></div>";
+        }
+        else
+        {
+            $data = "好像出错了";
+        }
+        return $data;
+    }
+
+
+}

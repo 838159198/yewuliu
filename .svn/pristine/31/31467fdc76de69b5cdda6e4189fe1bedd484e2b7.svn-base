@@ -1,0 +1,116 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: pc
+ * Date: 2015/8/20
+ * Time: 9:43
+ */
+class CeshiController extends Controller
+{
+    public function actionIndex()
+    {
+        header('Content-Type: text/html;charset=gb2312');
+        $ch = curl_init();
+        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_URL, "http://www.sogou.com/index.htm?pid=sogou-netb-38181d991caac98b-0010");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        //执行并获取HTML文档内容
+        $output = curl_exec($ch);
+        //释放curl句柄
+        curl_close($ch);
+        //转换成绝对路径
+        $string = str_replace("=\"res","=\"http://www.sogou.com/res",$output);
+        $string = str_replace("action=\"/sogou","action=\"http://www.sogou.com/sogou",$string);
+        $ad_bottom ="<div style=\"position: relative; width:600px; height:120px;top:0px;margin:0 auto; margin-top:-300px;z-index: 999;\"><script type=\"text/javascript\">
+			var sogou_ad_id=\"bottom_cubic1\";
+			var sogou_ad_pid=\"sogou-netb-38181d991caac98b-0010\";
+			var sogou_ad_width=600;
+			var sogou_ad_height=120;
+		</script><script type=\"text/javascript\" src=\"http://p.inte.sogou.com/add_index/js/c.compress.js\"></script></div>";
+        $string = str_replace("</body>",$ad_bottom."</body>",$string);
+        //打印获得的数据
+        print_r($string);
+
+        $pattern ='/<title>(.*?)<\/title>/';
+        //$abc = preg_match_all($pattern, $output, $data); //将此页面的章节连接匹配出来
+        //print_r($data);
+        //var_dump($abc);
+        //echo $data[1][0];
+        preg_match($pattern, $output, $hehe);
+        //var_dump($hehe);
+        //$string = str_replace("你就知道","你也不一定知道",$hehe[1]);
+        //echo $string;
+
+    }
+    private function actionA()
+    {
+        return "a";
+    }
+    protected function actionB()
+    {
+        return "b";
+    }
+    public function actionc()
+    {
+        echo $this->actionA();
+        echo $this->actionB();
+    }
+    /*
+     * 搜狗搜索
+     * */
+    public function actionSogou()
+    {
+        header('Content-Type: text/html;charset=gb2312');
+        $key = "sogou-netb-38181d991caac98b-0010";
+        $this->renderPartial("sogou",array("key"=>$key));
+    }
+    public function actionTest(){
+        $sql="SELECT d.postid,COUNT(d.postid) count FROM ele_operation_thread d LEFT JOIN ele_operation_post p ON d.postid=p.id WHERE d.create_uid IN (22,51,62)AND d.start_datetime>1483200000 AND d.end_datetime<1514736000 AND p.`status`=3 GROUP BY d.postid";
+        $result=yii::app()->db->createCommand($sql)->queryAll();
+        $shanshan=0;$shenxiu=0;$lili=0;$i=0;
+        foreach($result as $v){
+            $sql="select * from ele_operation_thread WHERE postid={$v['postid']} order by id  desc limit   1,1;";
+            $result=yii::app()->db->createCommand($sql)->queryAll();
+            if($result){
+                $uid=$result[0]['create_uid'];
+                if($uid==22) {
+                    $shanshan++;
+                }elseif($uid==51){
+                    $shenxiu++;
+                }elseif($uid==62){
+                    $lili++;
+                }else{
+
+                }
+            }
+            $i++;
+        }
+       $data['end']=array("shanshan"=>$shanshan,"shenxiu"=>$shenxiu,"lili"=>$lili);
+
+        $sql="SELECT d.create_uid,COUNT(d.postid) count FROM
+ele_operation_thread d LEFT JOIN ele_operation_post p ON d.postid=p.id
+WHERE d.create_uid IN (22,51,62)AND d.start_datetime>1483200000 AND
+d.end_datetime<1514736000 AND p.`status`=3 GROUP BY d.create_uid";
+        $result=yii::app()->db->createCommand($sql)->queryAll();
+
+        $a=0;$b=0;$c=0;
+        foreach($result as $value){
+
+                $uid=$value['create_uid'];
+                if($uid==22) {
+                   $a=$value['count'];
+                }elseif($uid==51){
+                    $b=$value['count'];
+                }elseif($uid==62){
+                    $c=$value['count'];
+                }else{
+                    continue;
+                }
+        }
+        $data['sum']=array("shanshan"=>$a,"shenxiu"=>$b,"lili"=>$c);
+        $this->render("test",array("data"=>$data));
+
+    }
+
+}
